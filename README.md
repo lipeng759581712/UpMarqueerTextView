@@ -3,7 +3,7 @@
 
 公司项目中的界面有一处 需要显示广告连接且可上下滚动，恰好在淘宝app上面见识到这个效果就模仿实现了。
 
-![图片效果](https://github.com/lipeng759581712/UpMarqueerTextView/blob/master/screenshot/UpMarqueeTextView.gif)
+![图片效果](https://github.com/lipeng759581712/UpMarqueerTextView/blob/master/screenshot/UpMarqueeTextView.gif "demo")
 
 使用方法：
 在xml布局中

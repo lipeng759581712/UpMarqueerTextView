@@ -5,6 +5,8 @@
 
 ![图片效果](https://github.com/lipeng759581712/UpMarqueerTextView/blob/master/screenshot/UpMarqueeTextView.gif)
 
+
+## 使用说明：
 ```xml
 <neacy.library.UpMarqueeLayout
         android:id="@+id/marquee_layout_id"

@@ -3,6 +3,7 @@ package neacy.upmarqueer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +31,21 @@ public class MainActivity extends AppCompatActivity {
         list.add("eltk为了天空个任务群公告");
         list.add("各个确认个人回去二乎乎");
 
+        mMarqueeLayout.setTextArray(names);
+//        mMarqueeLayout.setTextList(list);
+
+
+        mMarqueeLayout.setOnClickListener(new UpMarqueeLayout.OnClickListener() {
+            @Override
+            public void onClick() {
+                Toast.makeText(MainActivity.this,"跳转到评论详情页面",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                mMarqueeLayout.setTextArray(names);
-//                mMarqueeLayout.setTextList(list);
+                mMarqueeLayout.setText("暂停");
             }
         });
     }

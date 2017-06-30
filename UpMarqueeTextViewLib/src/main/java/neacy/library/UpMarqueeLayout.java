@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -45,6 +46,21 @@ public class UpMarqueeLayout extends FrameLayout{
     private TimerTask task;
     private int index;
 
+    private OnClickListener listener = null;
+
+    public interface OnClickListener{
+        void onClick();
+    }
+
+    public void setOnClickListener(OnClickListener listener){
+        this.listener = listener;
+    }
+
+    private void notifyOnClick(){
+        if (listener != null){
+            listener.onClick();
+        }
+    }
 
 
     private Handler MyHandler = new Handler(){
@@ -98,20 +114,43 @@ public class UpMarqueeLayout extends FrameLayout{
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.up_marquee_layout, this);
         mMarqueeTextView = (UpMarqueeTextView) findViewById(R.id.marquee);
+        mMarqueeTextView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                notifyOnClick();
+            }
+        });
     }
 
 
+    /**
+     * 传入单个字符串数据
+     * @param string
+     */
+    public void setText(String string){
+        closeTimer();//先关掉以前的定时器
+        mMarqueeTextView.setText(string);
+    }
+
+    /**
+     * 传入字符串list
+     */
     public void setTextList(List<String> list){
         this.textList = list;
         index = 0;
+        closeTimer();//先关掉以前的定时器
         timeTask(MESSAGE_TYPE_TEXT_LIST);
 
     }
 
+    /**
+     * 传入字符串数组
+     * @param array
+     */
     public void setTextArray(String[] array){
         this.textArray = array;
         index = 0;
-
+        closeTimer();//先关掉以前的定时器
         timeTask(MESSAGE_TYPE_TEXT_ARRAY);
 
     }
@@ -132,6 +171,21 @@ public class UpMarqueeLayout extends FrameLayout{
         timer.schedule(task, 0, 2000);
     }
 
+
+    /**
+     * 关闭定时任务
+     */
+    private void closeTimer(){
+        if (timer != null){
+            timer.cancel();
+            timer = null;
+        }
+        if(task != null){
+            task.cancel();
+            task = null;
+        }
+    }
+
     private void handlerArray(){
         if (index > textArray.length-1) {
             index = 0;
@@ -147,6 +201,7 @@ public class UpMarqueeLayout extends FrameLayout{
         mMarqueeTextView.setText(textList.get(index));
         index++;
     }
+
 
 
 

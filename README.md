@@ -17,8 +17,16 @@
 
 ```java
 UpMarqueeLayout mMarqueeLayout = (UpMarqueeLayout) findViewById(R.id.marquee_layout_id);
+```
 
 
+支持两种类型的数据传入：
+1、字符串数组
+```java
 private String[] names = {"我的地盘.蒲公英的约定.给我一首歌的时间.说好的幸福呢.......", "我的地盘", "蒲公英的约定", "给我一首歌的时间", "说好的幸福呢"};
 mMarqueeLayout.setTextArray(names);
+```
+2、字符串集合
+```java
+
 ```

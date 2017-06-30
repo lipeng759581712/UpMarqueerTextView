@@ -11,11 +11,30 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+
+/*
+写这个的主要目的是：
+1、把布局文件封装起来、外面直接这样引用就可以了
+<neacy.library.UpMarqueeLayout
+    android:id="@+id/marquee_layout_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</neacy.library.UpMarqueeLayout>
+
+2、把定时滚动任务封装在这个类，就不用在外面去写了，保持代码整洁、外层调用也方便
+*/
+
+
 /**
  * Created by maxpengli on 2017/6/29.
  */
 
 public class UpMarqueeLayout extends FrameLayout{
+
+
+    private final int MESSAGE_TYPE_TEXT_ARRAY = 0;
+    private final int MESSAGE_TYPE_TEXT_LIST  = 1;
 
     private UpMarqueeTextView mMarqueeTextView;
 
@@ -33,44 +52,18 @@ public class UpMarqueeLayout extends FrameLayout{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            if (index > textArray.length-1) {
-                index = 0;
+            switch (msg.what){
+                case MESSAGE_TYPE_TEXT_ARRAY:
+                    handlerArray();
+                    break;
+                case MESSAGE_TYPE_TEXT_LIST:
+                    handerList();
+                    break;
             }
-            mMarqueeTextView.setText(textArray[index]);
-            index++;
+
+
         }
     };
-
-
-
-    public void setTextList(List<String> list){
-        this.textList = list;
-
-    }
-
-    public void setTextArray(String[] array){
-        this.textArray = array;
-        index = 0;
-
-        task = new TimerTask() {
-            @Override
-            public void run() {
-
-                MyHandler.sendEmptyMessage(0);
-            }
-        };
-
-        timer = new Timer();
-        // 参数：
-        // 0，延时0秒后执行。
-        // 1000，每隔2秒执行1次task。
-        timer.schedule(task, 0, 2000);
-
-
-
-
-    }
-
     /**
      * new 的时候调用
      * @param context
@@ -106,6 +99,55 @@ public class UpMarqueeLayout extends FrameLayout{
         LayoutInflater.from(context).inflate(R.layout.up_marquee_layout, this);
         mMarqueeTextView = (UpMarqueeTextView) findViewById(R.id.marquee);
     }
+
+
+    public void setTextList(List<String> list){
+        this.textList = list;
+        index = 0;
+        timeTask(MESSAGE_TYPE_TEXT_LIST);
+
+    }
+
+    public void setTextArray(String[] array){
+        this.textArray = array;
+        index = 0;
+
+        timeTask(MESSAGE_TYPE_TEXT_ARRAY);
+
+    }
+
+    private void timeTask(final int what) {
+        task = new TimerTask() {
+            @Override
+            public void run() {
+
+                MyHandler.sendEmptyMessage(what);
+            }
+        };
+
+        timer = new Timer();
+        // 参数：
+        // 0，延时0秒后执行。
+        // 1000，每隔2秒执行1次task。
+        timer.schedule(task, 0, 2000);
+    }
+
+    private void handlerArray(){
+        if (index > textArray.length-1) {
+            index = 0;
+        }
+        mMarqueeTextView.setText(textArray[index]);
+        index++;
+    }
+
+    private void handerList(){
+        if (index > textList.size()-1) {
+            index = 0;
+        }
+        mMarqueeTextView.setText(textList.get(index));
+        index++;
+    }
+
 
 
 }
